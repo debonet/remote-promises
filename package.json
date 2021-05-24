@@ -1,0 +1,20 @@
+{
+  "name": "@debonet/remote-promises",
+  "version": "1.0.0",
+  "description": "Library to add a network abstraction between calls to and fulfillment of function promises",
+  "main": "src/remote-promises.js",
+  "scripts": {
+    "test": "jest test/*test*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/debonet/remote-promises.git"
+  },
+  "keywords": [ Promises Network Await Async Remote ],
+  "author": "Jeremy De Bonet",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/debonet/remote-promises/issues"
+  },
+  "homepage": "https://github.com/debonet/remote-promises#readme"
+}
