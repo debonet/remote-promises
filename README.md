@@ -211,7 +211,7 @@ _**port**_
 _**options**_
 > Other server options, see socket.io
 
-* returns
+_**returns**_
 > Returns a function that returns a promise that resolves with the result of the function as executed on the system running the `provide()` call.
 > 
 > The returned function contains a `close()` method that can be used to end the marshalling service.
