@@ -109,66 +109,111 @@ As with all promise returning functions, remote-promises can be used with the `a
 	}
 ```
 
+
+# Closing connections
+
+All remote-promise methods return an object with a `close()` method that can be used to terminate that end of the connection.
+
+Eg:
+
+```javascript
+	function somePromiseFunction(){ return new Promise( ... ) }
+
+  const server = RemotePromise.serve( somePromiseFunction, 3000, { path: "somePath" } );
+	const remoteFunction = RemotePromise.client( "ws://some_server:3000/somePath" );
+
+	server.close();
+	remoteFunction.close();
+
+  const provider = RemotePromise.provide( somePromiseFunction, "ws://some_server:3000/somePath" );	
+	const marshalledFunction = await RemotePromise.marshal( 3000, { path: "somePath" } );
+
+	provider.close();
+	marshalledFunction.close();
+~~~
+
+
+
+
 --------------
+
 # API
 
+## Serve
 
-## serve ( _func_, _port_[, _options_?] )
-## frpfsServe ( _func_, _port_[, _options_?] )
-## frpfsFunctionServer ( _func_, _url_ )
+* serve ( func, port[, options?] )
+* frpfsServe ( func, port[, options?] )
+* frpfsFunctionServer ( func[, options?] )
 
-### _func_ 
+Offers a function for execution for clients who connect via the `.client()` method described below
 
-a function that returns a promise ( or, equivalently, an async function ).
+_**func**_ 
+> a function that returns a promise ( or, equivalently, an async function ).
 
-### _port_
+_**port**_
+> the port number on which the service should be offered
 
-the port number on which the service should be offered
+-**options**_
+> Other server options, see socket.io
 
-### _options_
-
-Other server options, see socket.io
-
-
-## client ( _url_ )
-## ffpClient ( _url_ )
-## ffpCallerClient ( _func_, _url_ )
-
-### _url_
-
-A web socket url, served via the `serve()` method
-
-### returns
-
-Returns a function that returns a promise that resolves with the result of the function as executed on the system running the `serve()` call.
+-**returns**_
+> A RemotePromiseServer object, which can be closed via a `close()` call.
 
 
-## provide ( _func_, _url_ )
-## frpfcProvide ( _func_, _url_ )
-## frpfcFuncitonClient ( _func_, _url_ )
+## Client
 
-### _func_ 
+* client ( url )
+* ffpClient ( url )
+* ffpCallerClient ( url )
 
-a function that returns a promise ( or, equivalently, an async function ).
-### _url_
+Get a function that executes functionality offered on a server that is offering functionalty via the `serve()` method above.
 
-A web socket url, being marshaled via the `marshal()` method
+_**url**_
+> A web socket url, served via the `serve()` method
 
-## marshal ( _port_[, _options_?] )
-## ffpMarshal ( _port_[, _options_?] )
-## ffpCallerServer ( _port_[, _options_?] )
+_**returns**_
+> Returns a function that returns a promise that resolves with the result of the function as executed on the system running the `serve()` call.
+> 
+> The returned function contains a  `close()` method that can be used to disconnect the client
 
-### _port_
 
-the port number to which the service should be provided via a `provide()` call
 
-### _options_
+## Provide
 
-Other server options, see socket.io
+* provide ( func, url )
+* frpfcProvide ( func, url )
+* frpfcFuncitonClient ( func, url )
 
-### returns
+Offers a function for execution to a remote server that is marshalling functionalty via the `.marshal()` method below
 
-Returns a function that returns a promise that resolves with the result of the function as executed on the system running the `provide()` call.
+_**func**_ 
+> a function that returns a promise ( or, equivalently, an async function ).
 
+_**url**_
+> A web socket url, being marshaled via the `marshal()` method
+
+_**returns**_
+> Returns remote-promise server that can be closed via a call to `close()`
+
+
+## Marshal
+
+* marshal ( port[, options?] )
+* ffpMarshal ( port[, options?] )
+* ffpCallerServer ( port[, options?] )
+
+Opens a marshalling service for providers to offer functions for execution via the `.provide()` method above
+
+
+_**port**_
+> the port number to which the service should be provided via a `provide()` call
+
+_**options**_
+> Other server options, see socket.io
+
+* returns
+> Returns a function that returns a promise that resolves with the result of the function as executed on the system running the `provide()` call.
+> 
+> The returned function contains a `close()` method that can be used to end the marshalling service.
 
 
