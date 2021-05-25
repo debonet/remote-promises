@@ -113,28 +113,28 @@ As with all promise returning functions, remote-promises can be used with the `a
 # API
 
 
-## serve ( <func>, <port>[, <options>?] )
-## frpfsServe ( <func>, <port>[, <options>?] )
-## frpfsFunctionServer ( <func>, <url> )
+## serve ( _func_, _port_[, _options_?] )
+## frpfsServe ( _func_, _port_[, _options_?] )
+## frpfsFunctionServer ( _func_, _url_ )
 
-### <func> 
+### _func_ 
 
 a function that returns a promise ( or, equivalently, an async function ).
 
-### <port>
+### _port_
 
 the port number on which the service should be offered
 
-### <options>
+### _options_
 
 Other server options, see socket.io
 
 
-## client ( <url> )
-## ffpClient ( <url> )
-## ffpCallerClient ( <func>, <url> )
+## client ( _url_ )
+## ffpClient ( _url_ )
+## ffpCallerClient ( _func_, _url_ )
 
-### <url>
+### _url_
 
 A web socket url, served via the `serve()` method
 
@@ -143,26 +143,26 @@ A web socket url, served via the `serve()` method
 Returns a function that returns a promise that resolves with the result of the function as executed on the system running the `serve()` call.
 
 
-## provide ( <func>, <url> )
-## frpfcProvide ( <func>, <url> )
-## frpfcFuncitonClient ( <func>, <url> )
+## provide ( _func_, _url_ )
+## frpfcProvide ( _func_, _url_ )
+## frpfcFuncitonClient ( _func_, _url_ )
 
-### <func> 
+### _func_ 
 
 a function that returns a promise ( or, equivalently, an async function ).
-### <url>
+### _url_
 
 A web socket url, being marshaled via the `marshal()` method
 
-## marshal ( <port>[, <options>?] )
-## ffpMarshal ( <port>[, <options>?] )
-## ffpCallerServer ( <port>[, <options>?] )
+## marshal ( _port_[, _options_?] )
+## ffpMarshal ( _port_[, _options_?] )
+## ffpCallerServer ( _port_[, _options_?] )
 
-### <port>
+### _port_
 
 the port number to which the service should be provided via a `provide()` call
 
-### <options>
+### _options_
 
 Other server options, see socket.io
 
