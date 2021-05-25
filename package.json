@@ -10,11 +10,23 @@
     "type": "git",
     "url": "git+https://github.com/debonet/remote-promises.git"
   },
-  "keywords": [ Promises Network Await Async Remote ],
+  "keywords": [
+    "Promises",
+    "Network",
+    "Await",
+    "Async",
+    "Remote"
+  ],
   "author": "Jeremy De Bonet",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/debonet/remote-promises/issues"
   },
-  "homepage": "https://github.com/debonet/remote-promises#readme"
+  "homepage": "https://github.com/debonet/remote-promises#readme",
+  "dependencies": {
+    "@debonet/bugout": "^1.0.0",
+    "socket.io": "^4.1.2",
+    "socket.io-client": "^4.1.2",
+    "uuid": "^8.3.2"
+  }
 }
