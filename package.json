@@ -1,6 +1,6 @@
 {
   "name": "@debonet/remote-promises",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Library to add a network abstraction between calls to and fulfillment of function promises",
   "main": "src/remote-promises.js",
   "scripts": {

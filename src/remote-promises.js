@@ -53,8 +53,8 @@ class RemotePromiseCallerClient {
 		this.socket = SocketIOClient( ...vx );
 
 		this.stashJobs = new Stash();
-		this.socket.on( "ok", fOnCompleted );
-		this.socket.on( "err", fOnFailed );
+		this.socket.on( "resolve", fOnCompleted );
+		this.socket.on( "reject", fOnFailed );
 		this.socket.on( "disconnect", fOnDisconnect );
 
 		const self = this;
@@ -146,8 +146,8 @@ class RemotePromiseCallerServer {
 
 	// ---------------------------------------------------------------------------
 	fSetupNewProvider( socket ){
-		socket.on( "ok", fOnCompleted );
-		socket.on( "err", fOnFailed );
+		socket.on( "resolve", fOnCompleted );
+		socket.on( "reject", fOnFailed );
 		socket.on( "disconnect", fOnDisconnect );
 
 		const self = this;
@@ -194,12 +194,15 @@ class RemotePromiseCallerServer {
 			self.fHandleJobs();
 		});
 	}
+	run = this.fpCall;
+	request = this.fpCall;
+	issue = this.fpCall;
 	
 	// ---------------------------------------------------------------------------
 	fReissue( setidJobs ){
-for ( const idJob of setidJobs ){
-this.setidJobsWaiting.add( idJob );
-}
+		for ( const idJob of setidJobs ){
+			this.setidJobsWaiting.add( idJob );
+		}
 		this.fHandleJobs();
 	}
 
@@ -275,28 +278,38 @@ class RemotePromiseRunnerBase {
 			self.aSocketForId[ id ] = socket;
 
 			if ( ! b ){
-				return Promise.resolve( fp( ...vx ))
-					.then(( x ) => self.aSocketForId[ id ].emit( "ok", id, x ))
-					.catch(( x ) => self.aSocketForId[ id ].emit( "err", id, x ))
-					.finally(() => delete self.aSocketForId[ id ]);
+				self.fOnExecute( self.aSocketForId[ id ], id, fp, vx );
 			}
-			
 		});
 	}
+
+	fOnExecute( socket, id, fp, vx ){
+		return Promise.resolve( fp( ...vx ))
+			.then(( x ) => socket.emit( "resolve", id, x ))
+			.catch(( x ) => socket.emit( "reject", id, x ))
+			.finally(() => delete this.aSocketForId[ id ]);
+	}
+	
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 class RemotePromiseRunnerServer {
 
-io = undefined;
+	io = undefined;
 
 	// ------------------------------------
 	constructor( fp, ...vx ){
 		this.io = SocketIO ( ...vx );
+		const self = this;
 		this.io.on( "connection", ( socket ) => {
-			return new RemotePromiseRunnerBase( socket, fp );
+			return self.fRunnerBase( socket, fp );
 		});
+	}
+
+	// ------------------------------------
+	fRunnerBase ( socket, fp ){
+		return new RemotePromiseRunnerBase( socket, fp );
 	}
 
 	// ------------------------------------
@@ -342,13 +355,13 @@ function ffpCallerServer( ...vx ){
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-function frpfsRunnerServer( ...vx ){
+function frpRunnerServer( ...vx ){
 	return new RemotePromiseRunnerServer( ...vx );
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-function frpfcRunnerClient( ...vx ){
+function frpRunnerClient( ...vx ){
 	return new RemotePromiseRunnerClient( ...vx );
 }
 
@@ -361,34 +374,35 @@ module.exports = {
 	// conventional naming -------------------------
 	
 	// typical usage 
-	serve : frpfsRunnerServer,
+	serve : frpRunnerServer,
 	client : ffpCallerClient,
 
 	// flipped usage 
-	provide : frpfcRunnerClient,
+	provide : frpRunnerClient,
 	marshal : ffpCallerServer,
 
 	
 	// explicit naming -------------------------
 
 	// typical usage 
-	frpfsServe : frpfsRunnerServer,
+	frpServe : frpRunnerServer,
 	ffpClient : ffpCallerClient,
 
 	// flipped usage 
-	frpfcProvide : frpfcRunnerClient,
+	frpProvide : frpRunnerClient,
 	ffpMarshal : ffpCallerServer,
 
 	// explicit names
 	ffpCallerServer,
 	ffpCallerClient,
-	frpfcRunnerClient,
-	frpfcRunnerClient,
+	frpRunnerServer,
+	frpRunnerClient,
 
 	
 	// underlying classes ----------------------
 	CallerClient : RemotePromiseCallerClient,
 	CallerServer : RemotePromiseCallerServer,
+	RunnerBase : RemotePromiseRunnerBase,
 	RunnerClient : RemotePromiseRunnerClient,
 	RunnerServer : RemotePromiseRunnerServer
 }

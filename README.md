@@ -142,8 +142,8 @@ Eg:
 ## Serve
 
 * serve ( func, port[, options?] )
-* frpfsServe ( func, port[, options?] )
-* frpfsFunctionServer ( func[, options?] )
+* frpServe ( func, port[, options?] )
+* frpRunnerServer ( func[, options?] )
 
 Offers a function for execution for clients who connect via the `.client()` method described below
 
@@ -162,14 +162,17 @@ _**port**_
 
 ## Client
 
-* client ( url )
-* ffpClient ( url )
-* ffpCallerClient ( url )
+* client ( url[, options?] )
+* ffpClient ( url[, options?] )
+* ffpCallerClient ( url[, options?] )
 
 Get a function that executes functionality offered on a server that is offering functionalty via the `serve()` method above.
 
 _**url**_
 > A web socket url, served via the `serve()` method
+
+_**options**_
+> Other client options, see socket.io
 
 _**returns**_
 > Returns a function that returns a promise that resolves with the result of the function as executed on the system running the `serve()` call.
@@ -180,9 +183,9 @@ _**returns**_
 
 ## Provide
 
-* provide ( func, url )
-* frpfcProvide ( func, url )
-* frpfcFuncitonClient ( func, url )
+* provide ( func, url[, options?] )
+* frpProvide ( func, url[, options?] )
+* frpRunnerClient ( func, url[, options?] )
 
 Offers a function for execution to a remote server that is marshalling functionalty via the `.marshal()` method below
 
@@ -191,6 +194,9 @@ _**func**_
 
 _**url**_
 > A web socket url, being marshaled via the `marshal()` method
+
+_**options**_
+> Other client options, see socket.io
 
 _**returns**_
 > Returns remote-promise server that can be closed via a call to `close()`
