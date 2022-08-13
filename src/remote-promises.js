@@ -91,7 +91,6 @@ class RemotePromiseCallerClient {
 		this.fReconnect = fReconnect;
 		return this;
 	}
-	onReconnect = this.fOnReconnect;
 
 	// ---------------------------------------------------------------------------
 	fpCall( ...vxArgs ){
@@ -101,16 +100,11 @@ class RemotePromiseCallerClient {
 			self.socket.emit( "do", id, ...vxArgs );
 		});
 	}
-	run = this.fpCall;
-	request = this.fpCall;
-	issue = this.fpCall;
-
 
 	// ---------------------------------------------------------------------------
 	fClose( ...vx ){
 		this.socket.close( ...vx );
 	}
-	close = this.fClose;
 
 	// ---------------------------------------------------------------------------
 	ffpCaller(){
@@ -123,6 +117,12 @@ class RemotePromiseCallerClient {
 	}
 }
 
+// aliases
+RemotePromiseCallerClient.prototype.onReconnect = RemotePromiseCallerClient.prototype.fOnReconnect;
+RemotePromiseCallerClient.prototype.run = RemotePromiseCallerClient.prototype.fpCall;
+RemotePromiseCallerClient.prototype.request = RemotePromiseCallerClient.prototype.fpCall;
+RemotePromiseCallerClient.prototype.issue = RemotePromiseCallerClient.prototype.fpCall;
+RemotePromiseCallerClient.prototype.close = RemotePromiseCallerClient.prototype.fClose;
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -194,10 +194,7 @@ class RemotePromiseCallerServer {
 			self.fHandleJobs();
 		});
 	}
-	run = this.fpCall;
-	request = this.fpCall;
-	issue = this.fpCall;
-	
+
 	// ---------------------------------------------------------------------------
 	fReissue( setidJobs ){
 		for ( const idJob of setidJobs ){
@@ -235,14 +232,11 @@ class RemotePromiseCallerServer {
 		this.fReconnect = fReconnect;
 		return this;
 	}
-	onReconnect = this.fOnReconnect;
 
 	// ---------------------------------------------------------------------------
 	fClose( ...vx ){
 		this.io.close( ...vx );
 	}
-	close = this.fClose;
-
 
 	// ---------------------------------------------------------------------------
 	ffpCaller(){
@@ -255,6 +249,12 @@ class RemotePromiseCallerServer {
 	}
 }
 
+// aliases
+RemotePromiseCallerServer.prototype.run = RemotePromiseCallerServer.prototype.fpCall;
+RemotePromiseCallerServer.prototype.request = RemotePromiseCallerServer.prototype.fpCall;
+RemotePromiseCallerServer.prototype.issue = RemotePromiseCallerServer.prototype.fpCall;
+RemotePromiseCallerServer.prototype.onReconnect = RemotePromiseCallerServer.prototype.fOnReconnect;
+RemotePromiseCallerServer.prototype.close = RemotePromiseCallerServer.prototype.fClose;
 
 
 
@@ -316,8 +316,10 @@ class RemotePromiseRunnerServer {
 	fClose( ...vx ){
 		this.io.close( ...vx );
 	}
-	close = this.fClose;
 }
+
+// aliases
+RemotePromiseRunnerServer.prototype.close = RemotePromiseRunnerServer.prototype.fClose;
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -331,9 +333,10 @@ class RemotePromiseRunnerClient extends RemotePromiseRunnerBase {
 	fClose( ...vx ){
 		this.socket.close( ...vx );
 	}
-	close = this.fClose;
 }
 
+// aliases
+RemotePromiseRunnerClient.prototype.close = RemotePromiseRunnerClient.prototype.fClose;
 
 
 // ===========================================================================
